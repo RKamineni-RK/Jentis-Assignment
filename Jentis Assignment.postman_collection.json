@@ -1,0 +1,770 @@
+{
+	"info": {
+		"_postman_id": "526dfa2f-6129-42e8-9171-a41d3279f3fa",
+		"name": "Jentis Assignment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "32901438"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Validate to Add User with Valid Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set('token', jsonData.token);\r",
+									"pm.collectionVariables.set('email', jsonData.user.email);\r",
+									"\r",
+									"pm.test(\"201 Created - Successfully Created a User\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.replaceIn('{{$randomFirstName}}')\r",
+									"pm.variables.replaceIn('{{$randomLastName}}')\r",
+									"pm.variables.replaceIn('{{$randomEmail}}')\r",
+									"pm.variables.set('password', \"Tajmahal\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://thinking-tester-contact-list.herokuapp.com/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate to Add User with Invalid Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"400 Bad Request - Validation for Incorrect EmailId\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.replaceIn('{{$randomFirstName}}')\r",
+									"pm.variables.replaceIn('{{$randomLastName}}')\r",
+									"pm.variables.set('incorrectemail', \"roh.com\");\r",
+									"pm.variables.set('password', \"Tajmahal\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"email\": \"{{incorrectemail}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://thinking-tester-contact-list.herokuapp.com/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate to fetch User details with Invalid Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"401 Unauthorized - Invalid Token\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([401]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"url": "https://thinking-tester-contact-list.herokuapp.com/users/me"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate to fetch User details with Valid Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"200 Ok - Successfully fetched User Details \", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": "https://thinking-tester-contact-list.herokuapp.com/users/me"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate to Update User Details with Valid Data",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.replaceIn('{{$randomFirstName}}')\r",
+									"pm.variables.replaceIn('{{$randomLastName}}')"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set('firstName', jsonData.firstName);\r",
+									"pm.collectionVariables.set('lastName', jsonData.lastName);\r",
+									"pm.collectionVariables.set('email', jsonData.email);\r",
+									"\r",
+									"pm.test(\"200 OK - Successfully updated User First Name, Last Name and Email ID\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"email\": \"{{email}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://thinking-tester-contact-list.herokuapp.com/users/me"
+					},
+					"response": []
+				},
+				{
+					"name": "Add User - Validate with Same user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"400 Bad Request - Email address is already\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"{{firstName}}\",\r\n    \"lastName\": \"{{lastName}}\",\r\n    \"email\": \"{{email}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://thinking-tester-contact-list.herokuapp.com/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Log Out user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"200 OK - Successfully Logged out\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": "https://thinking-tester-contact-list.herokuapp.com/users/logout"
+					},
+					"response": []
+				},
+				{
+					"name": "Log In User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set('token', jsonData.token);\r",
+									"\r",
+									"pm.test(\"200 OK - Successfully Logged In\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"{{email}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://thinking-tester-contact-list.herokuapp.com/users/login"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Contacts",
+			"item": [
+				{
+					"name": "Validate to add New Contact",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.replaceIn('{{$randomFirstName}}')\r",
+									"pm.variables.replaceIn('{{$randomLastName}}')\r",
+									"pm.variables.set('birthdate',\"1970-01-01\");\r",
+									"pm.variables.replaceIn('{{$randomEmail}}')\r",
+									"pm.variables.replaceIn('{{$randomPhoneNumber}}')\r",
+									"pm.variables.replaceIn('{{$randomStreetName}}')\r",
+									"pm.variables.replaceIn('{{$randomStreetAddress}}')\r",
+									"pm.variables.replaceIn('{{$randomCity}}')\r",
+									"pm.variables.replaceIn('{{$randomCountryCode}}')\r",
+									"pm.environment.set(\"postalcode\", _.random(10000, 19999))\r",
+									"pm.variables.replaceIn('{{$$randomCountry}}')"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"201 Created - Successfully Added New Contact\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"birthdate\": \"{{birthdate}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"phone\": \"{{$randomPhoneNumber}}\",\r\n    \"street1\": \"{{$randomStreetName}}\",\r\n    \"street2\": \"{{$randomStreetAddress}}\",\r\n    \"city\": \"{{$randomCity}}\",\r\n    \"stateProvince\": \"{{$randomCountryCode}}\",\r\n    \"postalCode\": \"{{postalcode}}\",\r\n    \"country\": \"{{$randomCountry}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://thinking-tester-contact-list.herokuapp.com/contacts"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate to retrieve all Contacts from the Contact List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set('id', jsonData[0]._id);\r",
+									"\r",
+									"pm.test(\"200 OK - Successfully fetched all Contact from the Contact List of the User\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": "https://thinking-tester-contact-list.herokuapp.com/contacts"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate to fetch Latest Contact Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"200 OK - Fetched Latest Contact from the Contact List\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "https://thinking-tester-contact-list.herokuapp.com/contacts/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate to fetch Contact Details with Invalid ContactID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"400 Bad Request - Invalid Contact ID\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "https://thinking-tester-contact-list.herokuapp.com/contacts/65ca5a82d37774001373f47$"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate to Update latest Contact with Valid Data",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.replaceIn('{{$randomFirstName}}')\r",
+									"pm.variables.replaceIn('{{$randomLastName}}')\r",
+									"pm.variables.set('birthdate',\"1970-01-01\");\r",
+									"pm.variables.replaceIn('{{$randomEmail}}')\r",
+									"pm.variables.replaceIn('{{$randomPhoneNumber}}')\r",
+									"pm.variables.replaceIn('{{$randomStreetName}}')\r",
+									"pm.variables.replaceIn('{{$randomStreetAddress}}')\r",
+									"pm.variables.replaceIn('{{$randomCity}}')\r",
+									"pm.variables.replaceIn('{{$randomCountryCode}}')\r",
+									"pm.environment.set(\"postalcode\", _.random(10000, 19999))\r",
+									"pm.variables.replaceIn('{{$$randomCountry}}')"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"200 OK - Successfully updated Latest Contact from the Contact List\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"birthdate\": \"{{birthdate}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"phone\": \"{{$randomPhoneNumber}}\",\r\n    \"street1\": \"{{$randomStreetName}}\",\r\n    \"street2\": \"{{$randomStreetAddress}}\",\r\n    \"city\": \"{{$randomCity}}\",\r\n    \"stateProvince\": \"{{$randomCountryCode}}\",\r\n    \"postalCode\": \"{{postalcode}}\",\r\n    \"country\": \"{{$randomCountry}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://thinking-tester-contact-list.herokuapp.com/contacts/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate to Update latest Contact with Invalid Data",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.replaceIn('{{$randomFirstName}}')\r",
+									"pm.variables.replaceIn('{{$randomLastName}}')\r",
+									"pm.variables.set('birthdate',\"1970-01-01\");\r",
+									"pm.variables.replaceIn('{{$randomEmail}}')\r",
+									"pm.variables.replaceIn('{{$randomPhoneNumber}}')\r",
+									"pm.environment.set(\"StreetName\", \"P.Hans Frnakfurthersingel P.Hans Frnakfurthersingel P.Hans Frnakfurthersingel P.Hans Frnakfurthersingel\")\r",
+									"pm.variables.replaceIn('{{$randomStreetAddress}}')\r",
+									"pm.variables.replaceIn('{{$randomCity}}')\r",
+									"pm.variables.replaceIn('{{$randomCountryCode}}')\r",
+									"pm.environment.set(\"postalcode\", _.random(10000, 19999))\r",
+									"pm.variables.replaceIn('{{$$randomCountry}}')"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"400 Bad Request - Validation for Street 1 is longer than the maximum allowed length (40)\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "",
+								"variables": ""
+							}
+						},
+						"url": "https://thinking-tester-contact-list.herokuapp.com/contacts/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate to Update First and Last Name",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.replaceIn('{{$randomFirstName}}')\r",
+									"pm.variables.replaceIn('{{$randomLastName}}')"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"200 OK - Successfully updated First and Last Name from the latest Contact\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://thinking-tester-contact-list.herokuapp.com/contacts/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate to Delete the Latest Contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"200 OK - Successfully deleted the Latest Contact from the Contact List\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": "https://thinking-tester-contact-list.herokuapp.com/contacts/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate to delete Contact with recently deleted ContactID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"404 Not Found - ContactID not found\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([404]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": "https://thinking-tester-contact-list.herokuapp.com/contacts/{{id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate to delete the Current User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"200 OK - Successfully deleted the User\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": "https://thinking-tester-contact-list.herokuapp.com/users/me"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "firstName",
+			"value": ""
+		},
+		{
+			"key": "lastName",
+			"value": ""
+		},
+		{
+			"key": "password",
+			"value": ""
+		},
+		{
+			"key": "id",
+			"value": ""
+		}
+	]
+}
