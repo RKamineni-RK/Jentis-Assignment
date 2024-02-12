@@ -17,6 +17,6 @@ Created a Regression TestSuite using API TestCases on Postman, please find the f
 **Result**
 ![image](https://github.com/RKamineni-RK/Jentis-Assignment/assets/123577967/60677796-95f1-4941-b226-f00e6f84fc9a)
 
-Jentis Assignment - TestCases - Included both API and UI Testcases 
+**Jentis Assignment - TestCases** - Included both API and UI Testcases 
 
-Jentis Assignment - Answered based out of my experience and standard testing approach.
+**Jentis Assignment** - Answered based out of my experience and standard testing approach.
